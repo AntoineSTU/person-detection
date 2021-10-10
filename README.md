@@ -16,60 +16,60 @@ The current results were determined using pretrained [Inception v3 on keras](htt
 
 ## Table of contents
 
-1. [Tools](#tools)
-    a. [Raise dataset](#raise-dataset)
+1. [**Tools**](#tools)\
+    a. [Raise dataset](#raise-dataset)\
     b. [Inception model](#inception-model)
-2. [Overall procedure](#overall-procedure)
-    a. [Pre-processing](#pre-processing)
-    b. [Training of the detection model](#training-of-the-detection-model)
-    c. [Building of the localization model](#building-of-the-localization-model)
-    d. [Testing](#testing)
+2. [**Overall procedure**](#overall-procedure)\
+    a. [Pre-processing](#pre-processing)\
+    b. [Training of the detection model](#training-of-the-detection-model)\
+    c. [Building of the localization model](#building-of-the-localization-model)\
+    d. [Testing](#testing)\
     e. [Further steps](#further-steps)
-3. [Current work](#current-work)
-    a. [Data pre-processing](#data-pre-processing)
-    b. [Build the model](#build-the-model)
-    c. [Training](#training)
-    d. [People localization](#people-localization)
+3. [**Current work**](#current-work)\
+    a. [Data pre-processing](#data-pre-processing)\
+    b. [Build the model](#build-the-model)\
+    c. [Training](#training)\
+    d. [People localization](#people-localization)\
     e. [Results](#results)
-4. [Project structure](#project-structure)
-5. [Code structure](#code-structure)
-    a. Dataset formatting
-    b. Preprocessing
-    c. Preprocessing for isolated images
-    d. Training
-    e. Prediction
-    f. Visualization performance
-    g. Localization model build
-    h. Localization model prediction
-    i. Visualization of localization
-    j. Train model compiler
-    k. Run model compiler
-6. [The scripts](#the-scripts)
-    a. train_model.py script
-    b. run_model.py script
-7. [Presentation of the most important functions](#presentation-of-the-most-important-functions)
-    a. train_model_from_scratch
-    b. run_trained_model
-    c. create_formatted_dataset
-    d. pre_processing_train
-    e. preprocess_images
-    f. train_model
-    g. predict_class
-    h. visualize
-    i. build_localization_model
-    j. predict_localization
-    k. generate_localization_images
-8. [Sources and aknowledgements](#sources-and-aknowledgements)
+4. [**Project structure**](#project-structure)
+5. [**Code structure**](#code-structure)\
+    a. [Dataset formatting](#dataset-formatting)\
+    b. [Preprocessing](#preprocessing)\
+    c. [Preprocessing for isolated images](#preprocessing-for-isolated-images)\
+    d. [Training](#training-2)\
+    e. [Prediction](#prediction)\
+    f. [Performance analyzer](#performance-analyzer)\
+    g. [Localization model build](#localization-model-build)\
+    h. [Localization model prediction](#localization-model-prediction)\
+    i. [Visualization of localization](#visualization-of-localization)\
+    j. [Train model compiler](#train-model-compiler)\
+    k. [Run model compiler](#run-model-compiler)
+6. [**The scripts**](#the-scripts)\
+    a. [train_model.py script](#train-model-script)\
+    b. [run_model.py script](#run-model-script)
+7. [**Presentation of the most important functions**](#presentation-of-the-most-important-functions)\
+    a. [train_model_from_scratch](#train-model-from-scratch)\
+    b. [run_trained_model](#run-trained-model)\
+    c. [create_formatted_dataset](#create-formatted-dataset)\
+    d. [pre_processing_train](#pre-processing-train)\
+    e. [preprocess_images](#preprocess-images)\
+    f. [train_model](#train-model)\
+    g. [predict_class](#predict-class)\
+    h. [visualize](#visualize)\
+    i. [build_localization_model](#build-localization-model)\
+    j. [predict_localization](#predict-localization)\
+    k. [generate_localization_images](#generate-localization-images)
+8. [**Sources and aknowledgements**](#sources-and-aknowledgements)
 
 ## Tools
 
 ### Raise dataset
 
-Real-world dataset made up of 13,000 images labeled in different categories (_outdoor_, _indoor_, _landscape_, _nature_, _people_, _object_ and _building_).
+Real-world dataset made up of **13,000 images** labeled in different categories (_outdoor_, _indoor_, _landscape_, _nature_, _people_, _object_ and _building_).
 
 71% of the images of size 4928\*3264, 28% of size 4288\*2848, 1% of size 3008\*2000, both in vertical and horizontal directions.
 
-The dataset is unbalanced in our case: only 13% of the images were labeled _people_.
+The dataset is **unbalanced** in our case: only 13% of the images were labeled _people_.
 
 ### Inception model
 
@@ -264,6 +264,9 @@ Here is the summary of all the trainings:
 |2021_07_21-07_32_51  |True            |True            |-1       |True       |(600, 700)|True             |adam     |0.01         |binary_crossentropy         |100       |30     |             |True          |flatten   |0.808252427184466 |0.8410462776659959  |
 
 ## Project structure
+
+Here you can see our project file structure, made to be modular and simplify interactions with the different parts of the training.
+
 ```
 ├── README.md          <- The top-level README for developers using this project.
 │
@@ -374,13 +377,17 @@ We will here present the different code modules and their interfaces (in the _sr
 - **Parameters** represents additional parameters for the module (e.g. to try different algorithms)
 - **Output** represents the module's output
 
+<div id="dataset-formatting"></div>
+
 ### Dataset formatting (_create_formatted_dataset_ function)
 
 This module (located in preprocessing folder) helps to pre-format the dataframe before training. It extracts the classes and adds image paths.
 
-**Input:** Raw dataframe, link to the image folders (training, validation and testing)
-**Parameters:** How to format the class labels
+**Input:** Raw dataframe, link to the image folders (training, validation and testing)\
+**Parameters:** How to format the class labels\
 **Output:** Formatted dataframe
+
+<div id="preprocessing"></div>
 
 ### Preprocessing (_pre_processing_train_ function)
 
@@ -388,25 +395,27 @@ This module's goal is to format the data with the specified parameters and to en
 
 _Remark:_ For now, only *tif* pictures are used
 
-**Input:** Pre-formatted dataframe
-**Parameters:** Image size, filtering operation parameters, dataset balanced or not, number of images to process, batch size
+**Input:** Pre-formatted dataframe\
+**Parameters:** Image size, filtering operation parameters, dataset balanced or not, number of images to process, batch size\
 **Output:** {train: image iterator, validation: image iterator, test: image iterator}
 
 ***Cleaning step (cleaning_step function)***
 
 This submodule can remove images of specific sizes, or of specific mode (portrait/landscape).
 
-**Input:** Pre-processed dataframe
-**Parameters:** Specify what filtering operations should be performed
+**Input:** Pre-processed dataframe\
+**Parameters:** Specify what filtering operations should be performed\
 **Output:** Filtered dataframe
 
 ***Dataset builder (dataset_builder function)***
 
 This submodule create the iterators from the filtered dataframe, with other operations to be performed on the images.
 
-**Input:** Filtered dataframe
-**Parameters:** Image size, dataset balanced or not, number of images to process, batch size, preprocess function
+**Input:** Filtered dataframe\
+**Parameters:** Image size, dataset balanced or not, number of images to process, batch size, preprocess function\
 **Output:** {train: image iterator, validation: image iterator, test: image iterator}
+
+<div id="preprocessing-for-isolated-images"></div>
 
 ### Preprocessing for isolated images (_preprocess_images_ function)
 
@@ -414,16 +423,18 @@ This module's goal is to format some images with the specified parameters.
 
 _Remark:_ For now, only *tif* pictures are used
 
-**Input:** Image paths
-**Parameters:** Image size, preprocess function
+**Input:** Image paths\
+**Parameters:** Image size, preprocess function\
 **Output:** An array containing all the preprocessed images
+
+<div id="training-2"></div>
 
 ### Training (_train_model_ function)
 
 The goal of this module is to build and train the classification model (predict global class for each picture).
 
-**Input:** {train: image iterator, validation: image iterator, test: image iterator}, chosen model used in a transfer learning approach, layers to add on top
-**Parameters:** Specific model parameters, optimizer, loss, learning rate, nb of epochs, class weights
+**Input:** {train: image iterator, validation: image iterator, test: image iterator}, chosen model used in a transfer learning approach, layers to add on top\
+**Parameters:** Specific model parameters, optimizer, loss, learning rate, nb of epochs, class weights\
 **Output:** {model: built model, test_predictions: predictions on test images, test_metrics: metrics}
 
 
@@ -431,65 +442,77 @@ The goal of this module is to build and train the classification model (predict 
 
 This submodule creates and compiles the model to train.
 
-**Input:** Chosen model (for now only InceptionV3), layers to add
-**Parameters:** Image size, optimizer, loss, learning rate
+**Input:** Chosen model (for now only InceptionV3), layers to add\
+**Parameters:** Image size, optimizer, loss, learning rate\
 **Output:** Model
 
 ***Train the built model (fit_model function)***
 
 This submodule trains the prebuilt model with the formatted data.
 
-**Input:** Model, train data iterator, validation data iterator
-**Parameters:** Nb of epochs (or early stopping), class weights
+**Input:** Model, train data iterator, validation data iterator\
+**Parameters:** Nb of epochs (or early stopping), class weights\
 **Output:** Model
 
 ***Test the model (test_model function)***
 
 This submodule get the predicted classes from the trained model on the test data, and outputs the results and the accuracy (no result analysis is done here).
 
-**Input:** Model (as an object or a path), test image iterator
-**Parameters:** Nothing
+**Input:** Model (as an object or a path), test image iterator\
+**Parameters:** Nothing\
 **Output:** Predictions on test data, accuracy
+
+<div id="prediction"></div>
 
 ### Prediction (_predict\_class_ function)
 
 This function's goal is to predict the class of some input images.
 
-**Input:** Model, array of preprocessed images
-**Parameters:** Threshold mode
+**Input:** Model, array of preprocessed images\
+**Parameters:** Threshold mode\
 **Output:** Predictions
 
-### Visualization performance (_visualize_ function)
+<div id="performance-analyzer"></div>
+
+### Performance analyzer (_visualize_ function)
 
 This module's goal is to generate some metrics and graphs to analyze the performance of a model.
 
-**Input:** Raw predictions, labels, training history
-**Parameters:** What metrics/graphs to show
+**Input:** Raw predictions, labels, training history\
+**Parameters:** What metrics/graphs to show\
 **Output:** Metrics (the graphs are saved as png images)
+
+<div id="localization-model-build"></div>
 
 ### Localization model build (_build\_localization\_model_ function)
 
 This module's goal is to build the localization model from the detection one.
 
-**Input:** Trained detection model
-**Parameters:** Optimizer, loss, model type
+**Input:** Trained detection model\
+**Parameters:** Optimizer, loss, model type\
 **Output:** Localization model
+
+<div id="localization-model-prediction"></div>
 
 ### Localization model prediction (_predict\_localization_ function)
 
 This module's goal is to predict on which part of the images if there is a person or not.
 
-**Input:** Localization model, preprocessed images
-**Parameters:** Threshold mode/level
+**Input:** Localization model, preprocessed images\
+**Parameters:** Threshold mode/level\
 **Output:** Predictions as arrays
+
+<div id="visualization-of-localization"></div>
 
 ### Visualization of localization (_generate\_localization\_images_ function)
 
 This module's goal is to produce images with localization of people.
 
-**Input:** Preprocessed images, localization predictions
-**Parameters:** Visualize function, how to show the results
+**Input:** Preprocessed images, localization predictions\
+**Parameters:** Visualize function, how to show the results\
 **Output:** Nothing (the images are shown and/or saved)
+
+<div id="train-model-compiler"></div>
 
 ### Train model compiler (_train\_model\_from\_scratch_ function)
 
@@ -501,9 +524,11 @@ This function's goal is to run the full training pipeline, including
 
 It saves all the results and the logs in specific folders.
 
-**Input:** Image dataframe path
-**Parameters:** Parameters for all the steps (see above)
+**Input:** Image dataframe path\
+**Parameters:** Parameters for all the steps (see above)\
 **Output:** The detection model, the localization model and the metrics
+
+<div id="run-model-compiler"></div>
 
 ### Run model compiler (_run\_trained\_model_ function)
 
@@ -516,8 +541,8 @@ This function's goal is to generate the localization images on new images, using
 
 It saves all the results in specific folders.
 
-**Input:** Image paths, detection model, localization model (if not it is built from the detection one)
-**Parameters:** Parameters for all the steps (see above)
+**Input:** Image paths, detection model, localization model (if not it is built from the detection one)\
+**Parameters:** Parameters for all the steps (see above)\
 **Output:** The image classes and localizations
 
 ## The scripts
@@ -526,6 +551,8 @@ Two scripts were added, in the main directory, above the _/src_ one: **train_mod
 These scripts goal is to provide an easier interface to interact with the different module, using an argument parser (`python my_script.py --arg1 value1`) and outputing the results in specific folders.
 
 All the output folders and naming structure can be modified easily, by editing the **config.py** file, in which two environment configuration are defined (local or on a server).
+
+<div id="train-model-script"></div>
 
 ### train_model.py script
 
@@ -584,6 +611,8 @@ The _train\_model.py_ script saves the models, and the logs along with the model
   The name of the saved localization model
   **Default:** "localization_model"
 
+<div id="run-model-script"></div>
+
 ### run_model.py script
 
 The _run\_model.py_ script generate a visualization of the localization in some images, that may be saved and/or shown. These images are saved in the corresponding report subfolder, in the _/figures_ sub-subfolder.
@@ -623,6 +652,8 @@ The _run\_model.py_ script generate a visualization of the localization in some 
 ## Presentation of the most important functions
 
 In this part, we will present you the most important functions/scripts. You can find the same explanations by typing `my_function --help`.
+
+<div id="train-model-from-scratch"></div>
 
 ### train_model_from_scratch (_/src/train\_model.py_)
 
@@ -710,6 +741,8 @@ The goal of this function is to train a model from scratch.
 **Output:** _{"detection\_model": Keras model, "localization\_model": Keras model, "metrics": dictionary {string: float}}_
   The detection model, the localization model and the metrics produced on the test set
 
+<div id="run-trained-model"></div>
+
 ### run_trained_model (_/src/run\_model.py_)
 
 The goal of this function is to predict localization on input images.
@@ -758,6 +791,8 @@ This function's goal is to preprocess and load given images (/!\ don't give too 
 
 **Output:** _{"classes": [Numpy array], "localizations": [Numpy array]}_
   The predictions
+
+<div id="create-formatted-dataset"></div>
 
 ### create_formatted_dataset (_/src/pre\_processing/pre\_processing.py_)
 
@@ -816,6 +851,8 @@ every time with the same parameters): it extract the classes and add image paths
 **Output:** _Pandas dataframe_
   The same as before with the class ("Class"), dataset type ("Dataset Type") and image path ("Image Path") columns added
 
+<div id="pre-processing-train"></div>
+
 ### pre_processing_train (_/src/pre\_processing/pre\_processing.py_)
 
 This function's goal is to prepare the dataset and load the images.
@@ -870,6 +907,8 @@ on its mode (portrait mode or landscape mode)
 **Output:** _{train: DataFrameIterator, validation: DataFrameIterator, test: DataFrameIterator}_
   All the data needed for training
 
+<div id="preprocess-images"></div>
+
 ### preprocess_images (_/src/pre\_processing/simple\_preprocessing/pre\_processing.py_)
 
 This function's goal is to preprocess and load given images (/!\ don't give too much images)
@@ -892,6 +931,8 @@ This function's goal is to preprocess and load given images (/!\ don't give too 
 
 **Output:** _numpy array_
   All the loaded and preprocessed images
+
+<div id="train-model"></div>
 
 ### train_model (_/src/models/train\_model/train\_model.py_)
 
@@ -925,6 +966,8 @@ Train a model with pre-processed data
 **Output:** _{model: Keras model, test\_predictions: numpy array, test\_metrics: dict of metrics}_
   The model, the predictions, the metrics
 
+<div id="predict-class"></div>
+
 ### predict_class (_/src/models/prediction/prediction.py_)
 
 Return predictions for given model and data
@@ -940,6 +983,8 @@ Return predictions for given model and data
 
 **Output:** _numpy array_
   The predictions
+
+<div id="visualize"></div>
 
 ### visualize (_/src/visualization/visualization.py_)
 
@@ -957,6 +1002,8 @@ Show some metrics and plot some graphs from predictions and true labels.
 
 **Output:** _{"accuracy": float, "f1\_score": float}_
   The accuracy and f1 score
+
+<div id="build-localization-model"></div>
 
 ### build_localization_model (_/src/localization/build\_model/build\_model.py_)
 
@@ -978,6 +1025,8 @@ This function builds up the prediction model from the trained detection model wi
 **Output:** _Keras model_
   The localization model built from the trained detection model.
 
+<div id="predict-localization"></div>
+
 ### predict_localization (_/src/localization/predict\_localization/predict\_localization.py_)
 
 Return predictions for given model and data
@@ -993,6 +1042,8 @@ Return predictions for given model and data
 
 **Output:** _numpy array_
   The predictions
+
+<div id="generate-localization-images"></div>
 
 ### generate_localization_images (_/src/localization/visualization/visualization.py_)
 
@@ -1027,16 +1078,16 @@ This function shows all the people localization on images based on predictions.
 
 ## Sources and aknowledgements
 
-[Silverpond article on pedestrian detection](https://silverpond.com.au/2016/10/24/pedestrian-detection-using-tensorflow-and-inception/): this article gave us the key points to build and train these models.
+[**Silverpond article on pedestrian detection**](https://silverpond.com.au/2016/10/24/pedestrian-detection-using-tensorflow-and-inception/): this article gave us the key points to build and train these models.
 
-Tools:
-- [Inception v3 on keras](https://keras.io/api/applications/inceptionv3/)
-- [RAISE dataset](http://loki.disi.unitn.it/RAISE/index.php)
+**Tools:**
+- [**Inception v3 on keras**](https://keras.io/api/applications/inceptionv3/)
+- [**RAISE dataset**](http://loki.disi.unitn.it/RAISE/index.php)
 
-Project organization:
+**Project organization:**
 - [**Cookiecutter**](http://drivendata.github.io/cookiecutter-data-science/) : a well-documented pachage for project structure for ML
 - [**TowardsDataScience article**](https://towardsdatascience.com/organizing-machine-learning-projects-e4f86f9fdd9c): a simpler project structure for ML
 
-Other:
+**Other:**
 - [**Machine learning mastery article**](https://machinelearningmastery.com/how-to-use-transfer-learning-when-developing-convolutional-neural-network-models): an article about transfer learning
 - [**Towards data science article**](https://towardsdatascience.com/top-10-cnn-architectures-every-machine-learning-engineer-should-know-68e2b0e07201): an article presenting some well-known CNN architectures
