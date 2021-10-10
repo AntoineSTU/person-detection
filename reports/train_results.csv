@@ -1,0 +1,1 @@
+run_id,filter_with_size,filter_with_mode,nb_images,is_balanced,final_size,with_augmentation,optimizer,learning_rate,loss,batch_size,num_epo,class_weights,early_stopping,model_type,accuracy,f1_score
