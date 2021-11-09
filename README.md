@@ -1091,3 +1091,5 @@ This function shows all the people localization on images based on predictions.
 **Other:**
 - [**Machine learning mastery article**](https://machinelearningmastery.com/how-to-use-transfer-learning-when-developing-convolutional-neural-network-models): an article about transfer learning
 - [**Towards data science article**](https://towardsdatascience.com/top-10-cnn-architectures-every-machine-learning-engineer-should-know-68e2b0e07201): an article presenting some well-known CNN architectures
+
+A special thanks to RWTH University for helping us in this task.
